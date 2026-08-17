@@ -442,6 +442,13 @@ table.data-table tr:last-child td {
   width: 100%;
 }
 
+.auth-divider {
+  margin: 14px 0;
+  color: var(--gray-600);
+  font-size: 12px;
+  text-align: center;
+}
+
 .auth-error {
   color: var(--red);
 }
@@ -451,6 +458,11 @@ table.data-table tr:last-child td {
 }
 
 .auth-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.portal-choice .btn:disabled {
   cursor: not-allowed;
   opacity: 0.7;
 }

@@ -6,7 +6,14 @@ const portalLabel = {
   vendor: "Vendor Portal",
 };
 
-export default function AuthPage({ portal, error, isLoading, onBack, onSubmit }) {
+export default function AuthPage({
+  portal,
+  error,
+  isLoading,
+  onBack,
+  onGoogleSignIn,
+  onSubmit,
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState("");
@@ -29,6 +36,17 @@ export default function AuthPage({ portal, error, isLoading, onBack, onSubmit })
         <BrandLockup compact />
         <h1>{portalLabel[portal]} Sign In</h1>
 
+        <button
+          className="btn btn-primary auth-submit"
+          disabled={isLoading}
+          onClick={() => onGoogleSignIn(portal)}
+          type="button"
+        >
+          Continue with Google
+        </button>
+
+        <div className="auth-divider">or sign in with email</div>
+
         <form onSubmit={submit}>
           <div className="form-row auth-form-row">
             <input
@@ -49,7 +67,9 @@ export default function AuthPage({ portal, error, isLoading, onBack, onSubmit })
             />
           </div>
 
-          {(formError || error) && <div className="summary-box auth-error">{formError || error}</div>}
+          {(formError || error) && (
+            <div className="summary-box auth-error">{formError || error}</div>
+          )}
 
           <button className="btn btn-primary auth-submit" disabled={isLoading} type="submit">
             {isLoading ? "Signing In..." : "Sign In"}

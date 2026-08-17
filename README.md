@@ -12,7 +12,7 @@ The app is built as a frontend prototype with mock data so the main workflows ca
 - HTML: Vite entry page
 - React: hospital and vendor portal UI
 - Vite: local development server and production build tooling
-- Supabase Auth: email/password authentication and session handling
+- Supabase Auth: Google OAuth, email/password authentication, and session handling
 - Supabase Database: user profile role lookup
 - Leaflet.js: interactive map rendering
 - OpenStreetMap: public map tiles and geographic map data
@@ -37,8 +37,14 @@ cp .env.example .env
 Fill in the Supabase values:
 
 ```text
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
+VITE_SUPABASE_URL=
+VITE_SUPABASE_PUBLISHABLE_KEY=
+```
+
+For full Supabase, Google Cloud, Vercel, and profile table setup, see:
+
+```text
+SUPABASE_SETUP.md
 ```
 
 Start the development server:
@@ -89,7 +95,7 @@ In the Vendor Portal, a vendor user can:
 
 ### Supabase Authentication and Portal Access
 
-The prototype uses Supabase email/password authentication. Sessions are restored on app startup, and authentication state changes are tracked through Supabase Auth.
+The prototype uses Supabase Auth with Google Sign-In and email/password support. Sessions are restored on app startup, and authentication state changes are tracked through Supabase Auth.
 
 Protected routes:
 
@@ -103,14 +109,15 @@ Authentication routes:
 
 The app checks the authenticated user's role before showing a dashboard. A hospital user cannot access the vendor portal, and a vendor user cannot access the hospital portal.
 
-Minimum expected profile table:
+First-time Google users are asked to choose a role before entering a dashboard:
 
-```sql
-create table if not exists public.profiles (
-  user_id uuid primary key references auth.users(id) on delete cascade,
-  role text not null check (role in ('hospital', 'vendor')),
-  created_at timestamptz not null default now()
-);
+- `hospital`
+- `vendor`
+
+The safe SQL profile schema and RLS policies are in:
+
+```text
+supabase/profiles.sql
 ```
 
 Each authenticated Supabase user should have a matching `profiles` row with `role` set to either `hospital` or `vendor`.

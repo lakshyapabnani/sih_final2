@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import AccessMessage from "./components/Auth/AccessMessage.jsx";
 import AuthPage from "./components/Auth/AuthPage.jsx";
 import LandingPage from "./components/Auth/LandingPage.jsx";
+import RoleSelectionPage from "./components/Auth/RoleSelectionPage.jsx";
 import TopNav from "./components/Shared/TopNav.jsx";
 import SeasonalBar from "./components/Shared/SeasonalBar.jsx";
 import HospitalPortal from "./components/Hospital/HospitalPortal.jsx";
 import VendorPortal from "./components/Vendor/VendorPortal.jsx";
-import { authConfigMessage, hasSupabaseConfig, supabase } from "./lib/supabaseClient.js";
+import { authConfigMessage, hasSupabaseConfig, supabase } from "./lib/supabase.js";
 
 const portalRoutes = {
   "/hospital": "hospital",
@@ -31,7 +32,8 @@ function loginPath(portal) {
 }
 
 function normalizeRole(role) {
-  return role === "hospital" || role === "vendor" ? role : null;
+  const normalized = role?.toLowerCase();
+  return normalized === "hospital" || normalized === "vendor" ? normalized : null;
 }
 
 function friendlyAuthError(error) {
@@ -49,13 +51,25 @@ function friendlyAuthError(error) {
   return "Unable to sign in right now. Please check your credentials and try again.";
 }
 
+function profilePayload(user, selectedRole) {
+  return {
+    id: user.id,
+    user_id: user.id,
+    email: user.email || "",
+    full_name: user.user_metadata?.full_name || user.user_metadata?.name || "",
+    role: selectedRole,
+  };
+}
+
 export default function App() {
   const [season, setSeason] = useState("normal");
   const [route, setRoute] = useState(currentPath);
   const [session, setSession] = useState(null);
   const [role, setRole] = useState(null);
+  const [profileMissing, setProfileMissing] = useState(false);
   const [isBooting, setIsBooting] = useState(true);
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isSavingRole, setIsSavingRole] = useState(false);
   const [authError, setAuthError] = useState("");
 
   function navigate(path) {
@@ -66,19 +80,26 @@ export default function App() {
   async function resolveRole(user) {
     const metadataRole = normalizeRole(user?.user_metadata?.role);
 
-    if (!supabase || !user) return metadataRole;
+    if (!supabase || !user) {
+      setProfileMissing(!metadataRole);
+      return metadataRole;
+    }
 
     const { data, error } = await supabase
       .from("profiles")
       .select("role")
-      .eq("user_id", user.id)
+      .or(`user_id.eq.${user.id},id.eq.${user.id}`)
       .maybeSingle();
 
     if (error) {
+      console.error("Unable to load profile role", error);
+      setProfileMissing(!metadataRole);
       return metadataRole;
     }
 
-    return normalizeRole(data?.role) || metadataRole;
+    const resolved = normalizeRole(data?.role) || metadataRole;
+    setProfileMissing(!resolved);
+    return resolved;
   }
 
   useEffect(() => {
@@ -122,6 +143,9 @@ export default function App() {
     } = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
       setSession(nextSession);
       setRole(nextSession?.user ? await resolveRole(nextSession.user) : null);
+      if (!nextSession?.user) {
+        setProfileMissing(false);
+      }
     });
 
     return () => {
@@ -133,7 +157,7 @@ export default function App() {
   useEffect(() => {
     if (isBooting) return;
 
-    if (session && role && (route === "/" || loginRoutes[route])) {
+    if (session && role && !profileMissing && (route === "/" || loginRoutes[route])) {
       navigate(portalPath(role));
       return;
     }
@@ -142,7 +166,28 @@ export default function App() {
     if (requestedPortal && !session) {
       navigate(loginPath(requestedPortal));
     }
-  }, [isBooting, role, route, session]);
+  }, [isBooting, profileMissing, role, route, session]);
+
+  async function signInWithGoogle(portal) {
+    setAuthError("");
+
+    if (!hasSupabaseConfig || !supabase) {
+      setAuthError(authConfigMessage());
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}${loginPath(portal)}`,
+      },
+    });
+
+    if (error) {
+      console.error("Google sign-in failed", error);
+      setAuthError("Unable to start Google sign-in. Please try again.");
+    }
+  }
 
   async function signIn(portal, credentials) {
     setAuthError("");
@@ -162,10 +207,17 @@ export default function App() {
     }
 
     const userRole = await resolveRole(data.user);
+    if (!userRole) {
+      navigate("/");
+      setIsSigningIn(false);
+      return;
+    }
+
     if (userRole !== portal) {
       await supabase.auth.signOut();
       setSession(null);
       setRole(null);
+      setProfileMissing(false);
       setAuthError(`This account is not authorized for the ${portal} portal.`);
       setIsSigningIn(false);
       return;
@@ -177,12 +229,40 @@ export default function App() {
     navigate(portalPath(portal));
   }
 
+  async function saveRole(selectedRole) {
+    setAuthError("");
+
+    if (!session?.user || !supabase) {
+      setAuthError("Sign in before selecting a portal role.");
+      return;
+    }
+
+    setIsSavingRole(true);
+
+    const { error } = await supabase
+      .from("profiles")
+      .upsert(profilePayload(session.user, selectedRole), { onConflict: "id" });
+
+    if (error) {
+      console.error("Unable to save profile role", error);
+      setAuthError("Unable to save your portal role. Please try again.");
+      setIsSavingRole(false);
+      return;
+    }
+
+    setRole(selectedRole);
+    setProfileMissing(false);
+    setIsSavingRole(false);
+    navigate(portalPath(selectedRole));
+  }
+
   async function logout() {
     if (supabase) {
       await supabase.auth.signOut();
     }
     setSession(null);
     setRole(null);
+    setProfileMissing(false);
     setAuthError("");
     navigate("/");
   }
@@ -201,16 +281,39 @@ export default function App() {
   }
 
   if (route === "/") {
+    if (session && profileMissing) {
+      return (
+        <RoleSelectionPage
+          error={authError}
+          isLoading={isSavingRole}
+          onLogout={logout}
+          onSelectRole={saveRole}
+        />
+      );
+    }
+
     return <LandingPage onSelectPortal={(portal) => navigate(loginPath(portal))} />;
   }
 
   if (loginPortal) {
+    if (session && profileMissing) {
+      return (
+        <RoleSelectionPage
+          error={authError}
+          isLoading={isSavingRole}
+          onLogout={logout}
+          onSelectRole={saveRole}
+        />
+      );
+    }
+
     return (
       <AuthPage
         portal={loginPortal}
         error={authError}
         isLoading={isSigningIn}
         onBack={() => navigate("/")}
+        onGoogleSignIn={signInWithGoogle}
         onSubmit={(credentials) => signIn(loginPortal, credentials)}
       />
     );
@@ -233,7 +336,19 @@ export default function App() {
         error="Sign in to continue."
         isLoading={isSigningIn}
         onBack={() => navigate("/")}
+        onGoogleSignIn={signInWithGoogle}
         onSubmit={(credentials) => signIn(requestedPortal, credentials)}
+      />
+    );
+  }
+
+  if (profileMissing) {
+    return (
+      <RoleSelectionPage
+        error={authError}
+        isLoading={isSavingRole}
+        onLogout={logout}
+        onSelectRole={saveRole}
       />
     );
   }
