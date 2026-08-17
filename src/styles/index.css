@@ -83,6 +83,110 @@ table {
   color: var(--white);
 }
 
+/* Landing page */
+.landing-page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+}
+
+.landing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--black);
+}
+
+.landing-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.landing-brand img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.landing-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 42px 24px;
+}
+
+.landing-hero {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+  gap: 32px;
+  align-items: center;
+}
+
+.landing-hero-copy h1 {
+  font-size: 40px;
+  line-height: 1.05;
+  margin-bottom: 14px;
+}
+
+.landing-hero-copy p {
+  max-width: 620px;
+  color: var(--gray-600);
+  font-size: 17px;
+  margin: 0 0 22px;
+}
+
+.landing-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.landing-actions .btn {
+  min-width: 132px;
+  padding: 10px 16px;
+  font-size: 15px;
+}
+
+.landing-summary {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  background: var(--white);
+}
+
+.landing-summary div {
+  padding: 18px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.landing-summary div:last-child {
+  border-bottom: none;
+}
+
+.landing-summary strong,
+.landing-summary span {
+  display: block;
+}
+
+.landing-summary strong {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.landing-summary span {
+  color: var(--gray-600);
+  font-size: 14px;
+}
+
 /* Seasonal bar */
 .seasonal-bar {
   display: flex;
@@ -408,6 +512,23 @@ table.data-table tr:last-child td {
 }
 
 @media (max-width: 900px) {
+  .landing-main {
+    align-items: flex-start;
+    padding-top: 30px;
+  }
+
+  .landing-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-hero-copy h1 {
+    font-size: 30px;
+  }
+
+  .landing-hero-copy p {
+    font-size: 15px;
+  }
+
   .contingency-grid {
     grid-template-columns: 1fr;
   }
