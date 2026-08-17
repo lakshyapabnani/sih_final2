@@ -356,3 +356,63 @@ table.data-table tr:last-child td {
   border-radius: var(--radius);
   font-size: 15px;
 }
+
+.contingency-form {
+  padding: 16px;
+}
+
+.contingency-form .form-row button {
+  flex-shrink: 0;
+}
+
+.contingency-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 20px;
+}
+
+.contingency-map {
+  height: 420px;
+  width: 100%;
+  border-radius: var(--radius);
+}
+
+.contingency-marker {
+  border: 1px solid var(--black);
+  background: var(--white);
+  color: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.contingency-marker.requester {
+  background: var(--black);
+  color: var(--white);
+}
+
+.contingency-marker.source {
+  background: var(--green-bg);
+}
+
+.contingency-popup {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.contingency-popup .btn {
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .contingency-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contingency-form .form-row {
+    flex-direction: column;
+  }
+}

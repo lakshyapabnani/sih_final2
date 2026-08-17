@@ -3,12 +3,14 @@ import InventoryTab from "./InventoryTab.jsx";
 import VendorRankingsTab from "./VendorRankingsTab.jsx";
 import IncomingRequestsTab from "./IncomingRequestsTab.jsx";
 import AlertsTab from "./AlertsTab.jsx";
+import ContingencyNetworkTab from "./ContingencyNetworkTab.jsx";
 
 const TABS = [
   { id: "inventory", label: "Inventory" },
   { id: "rankings", label: "Vendor Rankings" },
   { id: "requests", label: "Incoming Requests" },
   { id: "alerts", label: "Surge Alerts" },
+  { id: "contingency", label: "Contingency Network" },
 ];
 
 export default function HospitalPortal({ season }) {
@@ -32,6 +34,7 @@ export default function HospitalPortal({ season }) {
         {tab === "rankings" && <VendorRankingsTab />}
         {tab === "requests" && <IncomingRequestsTab />}
         {tab === "alerts" && <AlertsTab season={season} />}
+        {tab === "contingency" && <ContingencyNetworkTab />}
       </div>
     </>
   );
