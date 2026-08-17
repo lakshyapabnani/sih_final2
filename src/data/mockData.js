@@ -101,10 +101,34 @@ export const vendors = [
 ];
 
 export const hospitals = [
-  { id: "h1", name: "City General Hospital" },
-  { id: "h2", name: "Lakeside Medical Center" },
-  { id: "h3", name: "St. Mary's Hospital" },
-  { id: "h4", name: "Riverside Clinic" },
+  {
+    id: "h1",
+    name: "City General Hospital",
+    address: "Fort, Mumbai, Maharashtra",
+    latitude: 18.9388,
+    longitude: 72.8354,
+  },
+  {
+    id: "h2",
+    name: "Lakeside Medical Center",
+    address: "Marine Lines, Mumbai, Maharashtra",
+    latitude: 18.9442,
+    longitude: 72.8244,
+  },
+  {
+    id: "h3",
+    name: "St. Mary's Hospital",
+    address: "Byculla, Mumbai, Maharashtra",
+    latitude: 18.9777,
+    longitude: 72.8336,
+  },
+  {
+    id: "h4",
+    name: "Riverside Clinic",
+    address: "Worli, Mumbai, Maharashtra",
+    latitude: 19.0176,
+    longitude: 72.8179,
+  },
 ];
 
 export const currentHospital = "City General Hospital";
@@ -199,6 +223,41 @@ export const nearbyHospitalsWithSurplus = {
   m3: [{ hospital: "St. Mary's Hospital", quantity: 260 }],
   m6: [{ hospital: "Riverside Clinic", quantity: 90 }],
 };
+
+export const hospitalMedicineInventory = [
+  { hospitalId: "h1", medicineId: "m1", quantity: 15 },
+  { hospitalId: "h1", medicineId: "m2", quantity: 340 },
+  { hospitalId: "h1", medicineId: "m3", quantity: 48 },
+  { hospitalId: "h1", medicineId: "m4", quantity: 520 },
+  { hospitalId: "h1", medicineId: "m5", quantity: 90 },
+  { hospitalId: "h1", medicineId: "m6", quantity: 12 },
+  { hospitalId: "h1", medicineId: "m7", quantity: 410 },
+  { hospitalId: "h1", medicineId: "m8", quantity: 55 },
+  { hospitalId: "h2", medicineId: "m1", quantity: 180 },
+  { hospitalId: "h2", medicineId: "m2", quantity: 75 },
+  { hospitalId: "h2", medicineId: "m3", quantity: 85 },
+  { hospitalId: "h2", medicineId: "m4", quantity: 240 },
+  { hospitalId: "h2", medicineId: "m5", quantity: 35 },
+  { hospitalId: "h2", medicineId: "m6", quantity: 28 },
+  { hospitalId: "h2", medicineId: "m7", quantity: 160 },
+  { hospitalId: "h2", medicineId: "m8", quantity: 18 },
+  { hospitalId: "h3", medicineId: "m1", quantity: 70 },
+  { hospitalId: "h3", medicineId: "m2", quantity: 145 },
+  { hospitalId: "h3", medicineId: "m3", quantity: 260 },
+  { hospitalId: "h3", medicineId: "m4", quantity: 90 },
+  { hospitalId: "h3", medicineId: "m5", quantity: 110 },
+  { hospitalId: "h3", medicineId: "m6", quantity: 35 },
+  { hospitalId: "h3", medicineId: "m7", quantity: 95 },
+  { hospitalId: "h3", medicineId: "m8", quantity: 44 },
+  { hospitalId: "h4", medicineId: "m1", quantity: 55 },
+  { hospitalId: "h4", medicineId: "m2", quantity: 40 },
+  { hospitalId: "h4", medicineId: "m3", quantity: 65 },
+  { hospitalId: "h4", medicineId: "m4", quantity: 130 },
+  { hospitalId: "h4", medicineId: "m5", quantity: 70 },
+  { hospitalId: "h4", medicineId: "m6", quantity: 90 },
+  { hospitalId: "h4", medicineId: "m7", quantity: 210 },
+  { hospitalId: "h4", medicineId: "m8", quantity: 12 },
+];
 
 export const approvedVendorsForDrug = {
   m1: [vendors[0], vendors[2]],
