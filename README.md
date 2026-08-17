@@ -12,8 +12,6 @@ The app is built as a frontend prototype with mock data so the main workflows ca
 - HTML: Vite entry page
 - React: hospital and vendor portal UI
 - Vite: local development server and production build tooling
-- Supabase Auth: Google OAuth, email/password authentication, and session handling
-- Supabase Database: user profile role lookup
 - Leaflet.js: interactive map rendering
 - OpenStreetMap: public map tiles and geographic map data
 - Nominatim: fallback geocoding when hospital coordinates are unavailable
@@ -26,25 +24,6 @@ Install dependencies:
 
 ```bash
 npm install
-```
-
-Create a local environment file:
-
-```bash
-cp .env.example .env
-```
-
-Fill in the Supabase values:
-
-```text
-VITE_SUPABASE_URL=
-VITE_SUPABASE_PUBLISHABLE_KEY=
-```
-
-For full Supabase, Google Cloud, Vercel, and profile table setup, see:
-
-```text
-SUPABASE_SETUP.md
 ```
 
 Start the development server:
@@ -73,7 +52,7 @@ npm run preview
 
 ## How a User Uses the Prototype
 
-The landing page lets the user choose between Hospital Portal and Vendor Portal sign-in. After successful Supabase authentication, the user is redirected to the matching protected dashboard.
+The top navigation lets the user switch between the Hospital Portal and Vendor Portal.
 
 In the Hospital Portal, a hospital user can:
 
@@ -92,35 +71,6 @@ In the Vendor Portal, a vendor user can:
 - Track in-transit and delivered orders.
 
 ## Core Prototype Functionalities
-
-### Supabase Authentication and Portal Access
-
-The prototype uses Supabase Auth with Google Sign-In and email/password support. Sessions are restored on app startup, and authentication state changes are tracked through Supabase Auth.
-
-Protected routes:
-
-- `/hospital`
-- `/vendor`
-
-Authentication routes:
-
-- `/hospital/login`
-- `/vendor/login`
-
-The app checks the authenticated user's role before showing a dashboard. A hospital user cannot access the vendor portal, and a vendor user cannot access the hospital portal.
-
-First-time Google users are asked to choose a role before entering a dashboard:
-
-- `hospital`
-- `vendor`
-
-The safe SQL profile schema and RLS policies are in:
-
-```text
-supabase/profiles.sql
-```
-
-Each authenticated Supabase user should have a matching `profiles` row with `role` set to either `hospital` or `vendor`.
 
 ### Hospital Inventory Management
 
@@ -176,13 +126,9 @@ This includes:
 - Vendor catalog
 - Delivery tracking data
 
-Supabase user profile roles are read from the `profiles` table. The app also supports `user_metadata.role` as a fallback for prototype accounts.
-
 ## Notes
 
 - This prototype does not require Google Maps or paid map APIs.
 - No API key is required for the current demo implementation.
-- Supabase credentials should stay in `.env` and must not be committed.
-- Vite client-side environment variables must use the `VITE_` prefix.
 - Public OpenStreetMap ecosystem services are suitable for prototype use, but production usage should follow each service's usage policy and may require a dedicated provider or self-hosted service.
 - The current app uses mock data instead of a persistent backend database.

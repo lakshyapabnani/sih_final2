@@ -66,32 +66,6 @@ table {
   letter-spacing: 0.02em;
 }
 
-.brand-lockup {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 700;
-  font-size: 26px;
-  letter-spacing: 0.02em;
-}
-
-.brand-lockup img {
-  width: 58px;
-  height: 58px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.brand-lockup-compact {
-  gap: 8px;
-  font-size: 16px;
-}
-
-.brand-lockup-compact img {
-  width: 34px;
-  height: 34px;
-}
-
 .portal-switch {
   display: flex;
   gap: 8px;
@@ -383,95 +357,6 @@ table.data-table tr:last-child td {
   font-size: 15px;
 }
 
-.auth-shell {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: var(--white);
-}
-
-.landing-panel,
-.auth-panel {
-  width: 100%;
-  max-width: 860px;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius);
-  padding: 24px;
-  background: var(--white);
-}
-
-.auth-panel {
-  max-width: 420px;
-}
-
-.landing-copy {
-  margin: 22px 0;
-  max-width: 640px;
-}
-
-.landing-copy p,
-.portal-choice p {
-  color: var(--gray-600);
-  font-size: 15px;
-  margin: 0;
-}
-
-.portal-choice-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.portal-choice {
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius);
-  padding: 16px;
-}
-
-.portal-choice .btn {
-  margin-top: 14px;
-}
-
-.auth-form-row {
-  display: block;
-}
-
-.auth-form-row input {
-  width: 100%;
-}
-
-.auth-divider {
-  margin: 14px 0;
-  color: var(--gray-600);
-  font-size: 12px;
-  text-align: center;
-}
-
-.auth-error {
-  color: var(--red);
-}
-
-.auth-submit {
-  width: 100%;
-}
-
-.auth-submit:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.portal-choice .btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.auth-secondary {
-  width: 100%;
-  margin-top: 10px;
-}
-
 .contingency-form {
   padding: 16px;
 }
@@ -529,29 +414,5 @@ table.data-table tr:last-child td {
 
   .contingency-form .form-row {
     flex-direction: column;
-  }
-}
-
-@media (max-width: 680px) {
-  .portal-choice-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .brand-lockup {
-    font-size: 20px;
-  }
-
-  .brand-lockup img {
-    width: 46px;
-    height: 46px;
-  }
-
-  .brand-lockup-compact {
-    font-size: 15px;
-  }
-
-  .brand-lockup-compact img {
-    width: 32px;
-    height: 32px;
   }
 }
